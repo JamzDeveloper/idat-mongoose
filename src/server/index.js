@@ -1,7 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const categoryRoutes = require("../modules/categories/routes");
 const ProductRoutes = require("../modules/product/routes/");
+const UserPath = require("../modules/user/routes")
+
 class Server {
   constructor() {
     this.app = express();
@@ -9,10 +12,11 @@ class Server {
     this.originPath = "/api";
     this.categoryPath = "/category";
     this.productPath = "/product";
+    this.userPath = "/user";
 
     //middleare
 
-    this.middleare();
+    this.middleware();
 
     //conection db
     this.connectionDb();
@@ -25,7 +29,12 @@ class Server {
   async connectionDb() {
     await mongoose.connect("mongodb://127.0.0.1:27017/idat");
   }
-  middleare() {
+  middleware() {
+
+
+    this.app.use(express.static(path.join(__dirname, "../public")));
+ 
+
     //parse and reading of body
     this.app.use(express.json());
   }
@@ -33,6 +42,8 @@ class Server {
   routes() {
     this.app.use(this.originPath + this.categoryPath, categoryRoutes);
     this.app.use(this.originPath + this.productPath, ProductRoutes);
+    this.app.use(this.originPath + this.userPath, UserPath);
+    
   }
 
   listen() {
