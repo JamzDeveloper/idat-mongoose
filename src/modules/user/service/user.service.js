@@ -1,4 +1,6 @@
 const { request, response } = require("express");
+const { validationResult } = require("express-validator");
+
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const User = require("../model/user.model");
@@ -20,8 +22,17 @@ const createUser = async (req = request, res = response) => {
 };
 
 const login = async (req = request, res = response) => {
-  const { email, password } = req.body;
+  // const result = validationResult(req);
 
+  // console.log(result.errors);
+  // if (result.errors.length > 0) {
+  //   return res.status(400).json({
+  //     error: result.errors[0].msg,
+  //   });
+  // }
+
+  // console.log(result);
+  const { email, password } = req.body;
   const userFound = await User.findOne({
     email,
   });
