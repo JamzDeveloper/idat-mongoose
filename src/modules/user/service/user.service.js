@@ -1,9 +1,10 @@
 const { request, response } = require("express");
-const { validationResult } = require("express-validator");
-
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const saltRounds = 10;
+
 const User = require("../model/user.model");
+
+const saltRounds = 10;
 
 const createUser = async (req = request, res = response) => {
   const { name, email, password, phone, avatar } = req.body;
@@ -51,7 +52,18 @@ const login = async (req = request, res = response) => {
     });
   }
 
-  res.json(userFound);
+  const token = jwt.sign({ _id: userFound._id }, "super_secret", {
+    expiresIn: 60 * 60,
+  });
+
+  console.log(token);
+
+  res.json({
+    user: userFound,
+    tokens: {
+      accessToken: token,
+    },
+  });
 };
 
 module.exports = {

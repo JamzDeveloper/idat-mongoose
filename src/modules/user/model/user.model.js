@@ -9,6 +9,10 @@ const User = mongoose.model("User", {
   },
   password: String,
   phone: String,
+  role: {
+    type: String,
+    default: "USER",
+  },
 });
 
 module.exports = User;
